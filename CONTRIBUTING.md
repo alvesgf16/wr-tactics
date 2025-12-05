@@ -61,9 +61,9 @@ This is a monorepo containing:
    cd api
    python -m venv .venv
    # Windows
-   venv\Scripts\activate
+   .venv\Scripts\activate
    # Mac/Linux
-   source venv/bin/activate
+   source .venv/bin/activate
 
    pip install -r requirements.txt
    pip install -r requirements-dev.txt
@@ -216,9 +216,9 @@ Navigate to the `api/` directory and activate your virtual environment:
 ```bash
 cd api
 # Windows
-venv\Scripts\activate
+.venv\Scripts\activate
 # Mac/Linux
-source venv/bin/activate
+source .venv/bin/activate
 ```
 
 #### Format code with Black
