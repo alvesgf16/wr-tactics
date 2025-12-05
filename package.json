@@ -1,0 +1,21 @@
+{
+  "name": "wr-tactics",
+  "version": "1.0.0",
+  "private": true,
+  "devDependencies": {
+    "@commitlint/cli": "^18.4.3",
+    "@commitlint/config-conventional": "^18.4.3",
+    "husky": "^8.0.3",
+    "lint-staged": "^16.2.7"
+  },
+  "lint-staged": {
+    "ui/**/*.{ts,tsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "api/**/*.py": [
+      "black",
+      "ruff --fix"
+    ]
+  }
+}
