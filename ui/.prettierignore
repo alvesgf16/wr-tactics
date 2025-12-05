@@ -3,3 +3,10 @@ node_modules
 coverage
 .vite
 *.log
+dist
+node_modules
+build
+coverage
+.vscode
+.env
+*.min.js
