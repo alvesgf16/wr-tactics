@@ -74,8 +74,12 @@ npm run build
 # Preview production build
 npm run preview
 
-# Run linter
-npm run lint
+# Code quality commands
+npm run lint              # Check for linting issues
+npm run lint:fix          # Auto-fix linting issues
+npm run format            # Format code with Prettier
+npm run format:check      # Check code formatting
+npm run typecheck         # Run TypeScript type checking
 ```
 
 The UI will be available at `http://localhost:5173`
@@ -102,6 +106,12 @@ uvicorn src.main:app --reload
 
 # Run tests
 pytest
+
+# Code quality commands
+black .                   # Format code with Black
+ruff check .              # Lint with Ruff
+ruff check . --fix        # Auto-fix Ruff issues
+mypy .                    # Type check with MyPy
 ```
 
 The API will be available at `http://localhost:8000`
@@ -142,15 +152,15 @@ Detailed documentation for each component:
 
 ## 🛠️ Technology Stack
 
-| Layer | Technology | Purpose |
-|-------|------------|---------|
-| **Frontend** | React + TypeScript + Vite | Modern, fast, type-safe UI |
-| **Styling** | Tailwind CSS | Utility-first CSS framework |
-| **Backend** | Python + FastAPI | High-performance API service |
-| **Database** | PostgreSQL (Supabase) | Relational data storage |
-| **Cache** | Redis (Upstash) | Fast tier list retrieval |
-| **Scraper** | Playwright | Dynamic content scraping |
-| **Deployment** | Vercel (UI) + Render (API) | Free tier hosting |
+| Layer          | Technology                 | Purpose                      |
+| -------------- | -------------------------- | ---------------------------- |
+| **Frontend**   | React + TypeScript + Vite  | Modern, fast, type-safe UI   |
+| **Styling**    | Tailwind CSS               | Utility-first CSS framework  |
+| **Backend**    | Python + FastAPI           | High-performance API service |
+| **Database**   | PostgreSQL (Supabase)      | Relational data storage      |
+| **Cache**      | Redis (Upstash)            | Fast tier list retrieval     |
+| **Scraper**    | Playwright                 | Dynamic content scraping     |
+| **Deployment** | Vercel (UI) + Render (API) | Free tier hosting            |
 
 ## 📅 Development Phases
 
@@ -190,6 +200,13 @@ Enhanced functionality for power users.
 ## 🤝 Contributing
 
 This is currently a personal project. Contributions, issues, and feature requests are welcome!
+
+See [CONTRIBUTING.md](./CONTRIBUTING.md) for detailed guidelines on:
+
+- Code style and formatting rules
+- Running linters and formatters
+- Commit message format
+- Pre-commit hook behavior
 
 ## 📄 License
 
