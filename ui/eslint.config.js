@@ -9,7 +9,7 @@ import prettierPlugin from 'eslint-plugin-prettier'
 import { defineConfig, globalIgnores } from 'eslint/config'
 
 export default defineConfig([
-  globalIgnores(['dist']),
+  globalIgnores(['dist', 'build', 'coverage', '*.config.js', '*.config.ts']),
   {
     files: ['**/*.{ts,tsx}'],
     extends: [
@@ -31,10 +31,15 @@ export default defineConfig([
         typescript: {
           alwaysTryTypes: true,
         },
+        node: true,
       },
     },
     rules: {
       'prettier/prettier': 'error',
+      '@typescript-eslint/no-unused-vars': 'error',
+      '@typescript-eslint/no-explicit-any': 'warn',
+      'react-hooks/rules-of-hooks': 'error',
+      'react-hooks/exhaustive-deps': 'warn',
       'import/order': [
         'error',
         {
@@ -54,6 +59,9 @@ export default defineConfig([
         },
       ],
       'import/no-unresolved': 'error',
+      complexity: 'off',
+      'max-lines-per-function': 'off',
+      'max-depth': 'off',
     },
   },
   prettierConfig,
