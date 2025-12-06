@@ -1,0 +1,33 @@
+version: 2
+updates:
+  # UI dependencies
+  - package-ecosystem: 'npm'
+    directory: '/ui'
+    schedule:
+      interval: 'weekly'
+      day: 'monday'
+    open-pull-requests-limit: 5
+    labels: ['dependencies', 'ui', 'frontend']
+    groups:
+      production-dependencies:
+        dependency-type: 'production'
+      development-dependencies:
+        dependency-type: 'development'
+
+  # API dependencies (pip)
+  - package-ecosystem: 'pip'
+    directory: '/api'
+    schedule:
+      interval: 'weekly'
+      day: 'monday'
+    open-pull-requests-limit: 5
+    labels: ['dependencies', 'api', 'backend']
+
+  # GitHub Actions
+  - package-ecosystem: 'github-actions'
+    directory: '/'
+    schedule:
+      interval: 'weekly'
+      day: 'monday'
+    open-pull-requests-limit: 3
+    labels: ['dependencies', 'github-actions', 'ci']
