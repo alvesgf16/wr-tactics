@@ -12,6 +12,7 @@ Thank you for your interest in contributing to WR Tactics! This document provide
 - [Running Linters Locally](#running-linters-locally)
   - [UI/Frontend](#uifrontend)
   - [API/Backend](#apibackend)
+- [Code Quality and Analysis](#code-quality-and-analysis)
 - [Commit Message Format](#commit-message-format)
 - [Pre-commit Hooks](#pre-commit-hooks)
 - [Development Workflow](#development-workflow)
@@ -401,6 +402,72 @@ If hooks aren't working, reinstall them:
 ```bash
 npm run prepare
 ```
+
+## Code Quality and Analysis
+
+We use **SonarCloud** for continuous code quality analysis and security scanning. SonarCloud automatically analyzes all pull requests and main branch commits.
+
+### What SonarCloud Checks
+
+- **Code Smells**: Maintainability issues and anti-patterns
+- **Bugs**: Potential runtime errors and logical issues
+- **Security Vulnerabilities**: Known security issues in code and dependencies
+- **Code Coverage**: Test coverage metrics from unit tests
+- **Code Duplications**: Duplicate code blocks
+- **Technical Debt**: Estimated time to fix all issues
+
+### Viewing Analysis Results
+
+1. **On Pull Requests**: SonarCloud analysis results appear as a check in your PR
+2. **SonarCloud Dashboard**: View detailed metrics at [sonarcloud.io](https://sonarcloud.io/organizations/alvesgf16/projects)
+3. **Local Analysis**: Use SonarLint IDE extensions for real-time feedback
+
+### Quality Gates
+
+All code must pass the SonarCloud quality gate before merging:
+
+- **No new bugs** on new code
+- **No new vulnerabilities** on new code
+- **Coverage on new code**: ≥80%
+- **Duplicated lines**: <3% on new code
+- **Maintainability rating**: A on new code
+
+### Running Tests with Coverage
+
+Coverage reports are generated automatically in CI, but you can run them locally:
+
+#### UI Coverage
+
+```bash
+cd ui
+npm run test:coverage
+```
+
+Coverage reports are generated in `ui/coverage/`:
+
+- `lcov.info` - SonarCloud format
+- `index.html` - Interactive HTML report
+
+#### API Coverage
+
+```bash
+cd api
+pytest --cov
+```
+
+Coverage reports are generated in `api/`:
+
+- `coverage.xml` - SonarCloud format
+- `htmlcov/index.html` - Interactive HTML report
+
+### Improving Code Quality
+
+If SonarCloud reports issues:
+
+1. Review the detailed explanation in the SonarCloud dashboard
+2. Fix the issue following the suggested remediation
+3. Run tests and linters locally to verify
+4. Push changes to update the PR analysis
 
 ## Development Workflow
 
