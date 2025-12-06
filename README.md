@@ -50,7 +50,7 @@ wr-tactics/
 
 ### Dependency Management
 
-The API uses separate requirement files for different deployment scenarios:
+The API uses separate requirements files for different deployment scenarios:
 
 - **`requirements.txt`**: Lightweight API deployment (FastAPI, database tools)
 - **`requirements-scraper.txt`**: Scraper deployment (Playwright, web scraping tools)
@@ -71,7 +71,7 @@ Dependencies are separated to optimize deployment size and performance:
 
 **Benefits:**
 
-- **Smaller API containers**: 30MB vs 230MB when scraper dependencies excluded
+- **Smaller API containers**: 30MB vs 230MB when scraper dependencies are excluded
 - **Faster cold starts**: Less installation overhead on platforms like Render
 - **Clear separation**: API and scraper can be deployed independently
 - **Cost efficiency**: Lighter containers use fewer resources
@@ -79,7 +79,7 @@ Dependencies are separated to optimize deployment size and performance:
 **Dependency Categories:**
 
 - **API-only**: FastAPI, Uvicorn
-- **Scraper-only**: Playwright, BeautifulSoup4
+- **Scraper-only**: Playwright, Beautiful Soup 4
 - **Shared**: SQLAlchemy, Redis, Pydantic (both use database/cache)
 
 ## 🚀 Quick Start
