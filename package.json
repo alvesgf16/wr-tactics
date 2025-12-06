@@ -17,8 +17,7 @@
       "prettier --write"
     ],
     "api/**/*.py": [
-      "black",
-      "ruff --fix"
+      "node lint-python.js"
     ]
   }
 }

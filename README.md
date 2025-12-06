@@ -17,36 +17,70 @@ Since Wild Rift doesn't support third-party overlays, this tool operates as a st
 
 ```plaintext
 wr-tactics/
-├── api/                    # FastAPI backend service
-│   ├── src/               # API source code
-│   ├── tests/             # API tests
-│   ├── requirements.txt   # Python dependencies
-│   └── README.md         # API documentation
+├── api/                         # Backend service (FastAPI)
+│   ├── src/
+│   │   ├── scraper/            # Data scraping module
+│   │   └── main.py             # API entry point
+│   ├── tests/                   # API tests
+│   ├── requirements.txt         # API dependencies (lightweight)
+│   ├── requirements-scraper.txt # Scraper dependencies
+│   ├── requirements-dev.txt     # Development dependencies
+│   ├── pyproject.toml          # Python project configuration
+│   └── README.md               # API documentation
 │
-├── scraper/               # Data scraping service
-│   ├── src/              # Scraper source code
-│   ├── tests/            # Scraper tests
-│   ├── requirements.txt  # Python dependencies
-│   └── README.md         # Scraper documentation
+├── ui/                          # React frontend application
+│   ├── src/                    # Frontend source code
+│   ├── public/                 # Static assets
+│   ├── package.json            # Node dependencies & scripts
+│   └── README.md               # UI documentation
 │
-├── ui/                    # React frontend application
-│   ├── src/              # Frontend source code
-│   ├── public/           # Static assets
-│   ├── package.json      # Node dependencies & scripts
-│   └── README.md         # UI documentation
+├── docs/                        # Detailed documentation
+│   └── (future docs)           # Architecture, API specs, etc.
 │
-├── docs/                  # Detailed documentation
-│   └── (future docs)     # Architecture, API specs, etc.
-│
-└── README.md             # This file
+└── README.md                   # This file
 ```
 
 ### Component Responsibilities
 
-- **`/api`**: REST API service providing tier lists, champion statistics, and draft suggestions
-- **`/scraper`**: Automated daily scraper that collects champion statistics from lolm.qq.com
+- **`/api`**: Monorepo containing both the REST API service and scraper module
+  - **`/api/src`**: API source code for tier lists, champion statistics, and draft suggestions
+  - **`/api/src/scraper`**: Scraper module for collecting champion statistics from lolm.qq.com
 - **`/ui`**: User-facing web application built with React, TypeScript, and Vite
 - **`/docs`**: Comprehensive project documentation (coming soon)
+
+### Dependency Management
+
+The API uses separate requirements files for different deployment scenarios:
+
+- **`requirements.txt`**: Lightweight API deployment (FastAPI, database tools)
+- **`requirements-scraper.txt`**: Scraper deployment (Playwright, web scraping tools)
+- **`requirements-dev.txt`**: Development tools (testing, linting, formatting)
+- **`pyproject.toml`**: Python project configuration with optional dependency groups
+
+#### Why Split Dependencies?
+
+Dependencies are separated to optimize deployment size and performance:
+
+**Size Comparison:**
+
+- **API-only deployment**: ~30MB (FastAPI, database tools)
+- **Scraper deployment**: ~230MB (includes Playwright + browser binaries)
+  - Playwright package: ~5MB
+  - Chromium browser binary: ~150MB
+  - Browser dependencies: ~50MB
+
+**Benefits:**
+
+- **Smaller API containers**: 30MB vs 230MB when scraper dependencies are excluded
+- **Faster cold starts**: Less installation overhead on platforms like Render
+- **Clear separation**: API and scraper can be deployed independently
+- **Cost efficiency**: Lighter containers use fewer resources
+
+**Dependency Categories:**
+
+- **API-only**: FastAPI, Uvicorn
+- **Scraper-only**: Playwright, Beautiful Soup 4
+- **Shared**: SQLAlchemy, Redis, Pydantic (both use database/cache)
 
 ## 🚀 Quick Start
 
@@ -94,8 +128,16 @@ python -m venv venv
 venv\Scripts\activate  # Windows
 # source venv/bin/activate  # Mac/Linux
 
-# Install dependencies
-pip install -r requirements.txt
+# Install dependencies (choose one approach):
+
+# Option 1: Using pyproject.toml (recommended for development)
+pip install -e .[api,dev]      # API + dev tools
+pip install -e .[scraper,dev]  # Scraper + dev tools
+pip install -e .[all]          # Everything
+
+# Option 2: Using requirements files (for production/deployment)
+pip install -r requirements.txt -r requirements-dev.txt         # API
+pip install -r requirements-scraper.txt -r requirements-dev.txt # Scraper
 
 # Set environment variables
 # DATABASE_URL=postgresql://...
@@ -118,16 +160,13 @@ The API will be available at `http://localhost:8000`
 
 ### Scraper
 
+The scraper is integrated into the API as a module at `api/src/scraper`.
+
 ```bash
-cd scraper
+cd api
 
-# Create virtual environment
-python -m venv venv
-venv\Scripts\activate  # Windows
-# source venv/bin/activate  # Mac/Linux
-
-# Install dependencies
-pip install -r requirements.txt
+# Ensure scraper dependencies are installed
+pip install -e .[scraper]  # or: pip install -r requirements-scraper.txt
 
 # Install Playwright browsers
 playwright install
@@ -136,7 +175,7 @@ playwright install
 # DATABASE_URL=postgresql://...
 
 # Run scraper manually
-python src/main.py
+python -m src.scraper.main
 
 # Run tests
 pytest
@@ -146,8 +185,7 @@ pytest
 
 Detailed documentation for each component:
 
-- **[API Documentation](./api/README.md)** - REST API endpoints, database schema, deployment
-- **[Scraper Documentation](./scraper/README.md)** - Scraping logic, scheduling, data validation
+- **[API Documentation](./api/README.md)** - REST API endpoints, database schema, scraper module, deployment
 - **[UI Documentation](./ui/README.md)** - Component structure, state management, styling
 
 ## 🛠️ Technology Stack

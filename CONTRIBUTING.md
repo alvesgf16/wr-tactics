@@ -21,8 +21,25 @@ Thank you for your interest in contributing to WR Tactics! This document provide
 This is a monorepo containing:
 
 - **`ui/`** - Frontend application (React + TypeScript + Vite)
-- **`api/`** - Backend API (Python FastAPI)
-- **`scraper/`** - Data scraping utilities (Python)
+- **`api/`** - Backend monorepo (Python FastAPI)
+  - **`api/src/`** - API source code
+  - **`api/src/scraper/`** - Data scraping module
+
+### Why Are Backend Dependencies Split?
+
+The API uses separate requirement files to optimize deployment:
+
+- **API deployment** (~30MB): Only FastAPI and database tools
+- **Scraper deployment** (~230MB): Includes Playwright with browser binaries (~200MB)
+
+This separation enables:
+
+- Lightweight API containers (30MB vs 230MB)
+- Faster cold starts on hosting platforms
+- Independent deployment of API and scraper services
+- Clear separation of concerns
+
+See [README.md](./README.md#why-split-dependencies) for detailed breakdown.
 
 ## Getting Started
 
@@ -65,8 +82,19 @@ This is a monorepo containing:
    # Mac/Linux
    source .venv/bin/activate
 
-   pip install -r requirements.txt
-   pip install -r requirements-dev.txt
+   # Install dependencies (choose one approach):
+
+   # Option 1: Using pyproject.toml (recommended for development)
+   pip install -e .[api,dev]      # API development
+   pip install -e .[scraper,dev]  # Scraper development
+   pip install -e .[all]          # Everything (API + scraper + dev)
+
+   # Option 2: Using requirements files (for CI/production)
+   pip install -r requirements.txt -r requirements-dev.txt         # API
+   pip install -r requirements-scraper.txt -r requirements-dev.txt # Scraper
+
+   # If using scraper, install Playwright browsers:
+   playwright install
    ```
 
 ## Code Style Guidelines
@@ -157,13 +185,28 @@ from src.models import Champion
 from src.schemas import ChampionResponse
 
 
+router = APIRouter()
+
+
+@router.get("/champions", response_model=List[ChampionResponse])
 def get_champions(db: Session = Depends(get_db)) -> List[ChampionResponse]:
     """Retrieve all champions from the database."""
     champions = db.query(Champion).all()
     return [ChampionResponse.from_orm(champ) for champ in champions]
 ```
 
+### Python (Scraper)
+
+The scraper module follows the same Python code style as the API, with additional considerations:
+
+- **Retry Logic**: Use `tenacity` for handling scraping failures
+- **Browser Automation**: Follow Playwright best practices
+- **Data Validation**: Use Pydantic models for scraped data
+- **Error Handling**: Implement comprehensive error handling for network issues
+
 ## Running Linters Locally
+
+> **Note**: All Python code quality tools (Black, Ruff, MyPy, Pytest) run against the entire `api/` directory, covering both API and scraper code. There's no need to run separate commands for the scraper module.
 
 ### UI/Frontend
 
@@ -372,13 +415,11 @@ npm run prepare
    Example: `WRT-123-add-champion-filtering`
 
 2. **Make your changes**
-
    - Write code following the style guidelines
    - Run linters frequently (or enable IDE integration)
    - Commit often with meaningful commit messages
 
 3. **Before committing**
-
    - Pre-commit hooks will automatically run
    - Fix any issues that can't be auto-corrected
    - Ensure your commit message follows the conventional format
