@@ -17,8 +17,7 @@
       "prettier --write"
     ],
     "api/**/*.py": [
-      "api\\.venv\\Scripts\\black.exe",
-      "api\\.venv\\Scripts\\ruff.exe check --fix"
+      "node lint-python.js"
     ]
   }
 }
