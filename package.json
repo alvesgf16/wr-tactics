@@ -17,8 +17,8 @@
       "prettier --write"
     ],
     "api/**/*.py": [
-      "black",
-      "ruff --fix"
+      "api\\.venv\\Scripts\\black.exe",
+      "api\\.venv\\Scripts\\ruff.exe check --fix"
     ]
   }
 }
