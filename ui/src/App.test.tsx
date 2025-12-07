@@ -1,100 +1,73 @@
 import { render, screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
-import { describe, expect, it } from 'vitest';
+import { beforeEach, describe, expect, it } from 'vitest';
 
 import App from './App';
 
 describe('App', () => {
-  it('renders Vite and React logos', () => {
+  const getViteLogo = () => screen.getByAltText('Vite logo');
+  const getReactLogo = () => screen.getByAltText('React logo');
+  const getTitle = () =>
+    screen.getByRole('heading', { name: /vite \+ react/i });
+  const getButton = (count: number) =>
+    screen.getByRole('button', { name: new RegExp(`count is ${count}`, 'i') });
+  const getInstruction = () => screen.getByText(/edit/i);
+  const getDocText = () =>
+    screen.getByText(/click on the vite and react logos to learn more/i);
+  const getViteLink = () => screen.getByRole('link', { name: /vite logo/i });
+  const getReactLink = () => screen.getByRole('link', { name: /react logo/i });
+
+  beforeEach(() => {
     render(<App />);
+  });
 
-    const viteLogo = screen.getByAltText('Vite logo');
-    const reactLogo = screen.getByAltText('React logo');
-
-    expect(viteLogo).toBeInTheDocument();
-    expect(reactLogo).toBeInTheDocument();
+  it('renders Vite and React logos', () => {
+    expect(getViteLogo()).toBeInTheDocument();
+    expect(getReactLogo()).toBeInTheDocument();
   });
 
   it('renders the title', () => {
-    render(<App />);
-
-    const title = screen.getByRole('heading', { name: /vite \+ react/i });
-
-    expect(title).toBeInTheDocument();
+    expect(getTitle()).toBeInTheDocument();
   });
 
   it('renders initial count as 0', () => {
-    render(<App />);
-
-    const button = screen.getByRole('button', { name: /count is 0/i });
-
-    expect(button).toBeInTheDocument();
+    expect(getButton(0)).toBeInTheDocument();
   });
 
   it('increments count when button is clicked', async () => {
     const user = userEvent.setup();
-    render(<App />);
 
-    const button = screen.getByRole('button', { name: /count is 0/i });
+    await user.click(getButton(0));
 
-    await user.click(button);
-
-    expect(
-      screen.getByRole('button', { name: /count is 1/i })
-    ).toBeInTheDocument();
+    expect(getButton(1)).toBeInTheDocument();
   });
 
   it('increments count multiple times', async () => {
     const user = userEvent.setup();
-    render(<App />);
 
-    const button = screen.getByRole('button', { name: /count is 0/i });
+    await user.click(getButton(0));
+    await user.click(getButton(1));
+    await user.click(getButton(2));
 
-    await user.click(button);
-    await user.click(screen.getByRole('button', { name: /count is 1/i }));
-    await user.click(screen.getByRole('button', { name: /count is 2/i }));
-
-    expect(
-      screen.getByRole('button', { name: /count is 3/i })
-    ).toBeInTheDocument();
+    expect(getButton(3)).toBeInTheDocument();
   });
 
   it('renders the HMR instruction text', () => {
-    render(<App />);
-
-    const instruction = screen.getByText(/edit/i);
-
-    expect(instruction).toBeInTheDocument();
-    expect(instruction).toHaveTextContent('src/App.tsx');
+    expect(getInstruction()).toBeInTheDocument();
+    expect(getInstruction()).toHaveTextContent('src/App.tsx');
   });
 
   it('renders the documentation link text', () => {
-    render(<App />);
-
-    const docText = screen.getByText(
-      /click on the vite and react logos to learn more/i
-    );
-
-    expect(docText).toBeInTheDocument();
+    expect(getDocText()).toBeInTheDocument();
   });
 
   it('renders links with correct hrefs', () => {
-    render(<App />);
-
-    const viteLink = screen.getByRole('link', { name: /vite logo/i });
-    const reactLink = screen.getByRole('link', { name: /react logo/i });
-
-    expect(viteLink).toHaveAttribute('href', 'https://vite.dev');
-    expect(reactLink).toHaveAttribute('href', 'https://react.dev');
+    expect(getViteLink()).toHaveAttribute('href', 'https://vite.dev');
+    expect(getReactLink()).toHaveAttribute('href', 'https://react.dev');
   });
 
   it('opens links in new tab', () => {
-    render(<App />);
-
-    const viteLink = screen.getByRole('link', { name: /vite logo/i });
-    const reactLink = screen.getByRole('link', { name: /react logo/i });
-
-    expect(viteLink).toHaveAttribute('target', '_blank');
-    expect(reactLink).toHaveAttribute('target', '_blank');
+    expect(getViteLink()).toHaveAttribute('target', '_blank');
+    expect(getReactLink()).toHaveAttribute('target', '_blank');
   });
 });
