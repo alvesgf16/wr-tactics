@@ -1,0 +1,10 @@
+{
+  "include": ["api/src"],
+  "typeCheckingMode": "strict",
+  "executionEnvironments": [
+    {
+      "root": "api/src",
+      "pythonVersion": "3.11"
+    }
+  ]
+}

@@ -2,8 +2,11 @@
   "name": "wr-tactics",
   "version": "1.0.0",
   "private": true,
+  "workspaces": [
+    "ui"
+  ],
   "scripts": {
-    "prepare": "husky install"
+    "prepare": "node .husky/install.mjs"
   },
   "devDependencies": {
     "@commitlint/cli": "^18.4.3",
@@ -13,8 +16,8 @@
   },
   "lint-staged": {
     "ui/**/*.{ts,tsx}": [
-      "eslint --fix",
-      "prettier --write"
+      "npm run lint:fix --workspace=ui",
+      "npm run format --workspace=ui"
     ],
     "api/**/*.py": [
       "node lint-python.js"
