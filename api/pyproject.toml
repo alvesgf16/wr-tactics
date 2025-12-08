@@ -128,6 +128,7 @@ addopts = [
 
 [tool.coverage.run]
 source = ["src"]
+relative_files = true
 omit = [
     "*/tests/*",
     "*/__pycache__/*",
