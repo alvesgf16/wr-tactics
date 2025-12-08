@@ -10,6 +10,7 @@ jobs:
   analyze-ui:
     name: Analyze UI
     runs-on: ubuntu-latest
+    if: github.actor != 'dependabot[bot]'
 
     steps:
       - name: Checkout code
@@ -43,6 +44,7 @@ jobs:
   analyze-api:
     name: Analyze API
     runs-on: ubuntu-latest
+    if: github.actor != 'dependabot[bot]'
 
     steps:
       - name: Checkout code
