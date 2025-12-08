@@ -117,7 +117,7 @@ python_files = ["test_*.py"]
 python_classes = ["Test*"]
 python_functions = ["test_*"]
 addopts = [
-    "--cov=src",
+    "--cov=.",
     "--cov-report=xml",
     "--cov-report=html",
     "--cov-report=term-missing",
@@ -127,7 +127,7 @@ addopts = [
 ]
 
 [tool.coverage.run]
-source = ["src"]
+source = ["."]
 relative_files = true
 omit = [
     "*/tests/*",
@@ -137,6 +137,9 @@ omit = [
     "**/__init__.py",
     "**/migrations/*",
 ]
+
+[tool.coverage.xml]
+output = "coverage.xml"
 
 [tool.coverage.report]
 exclude_lines = [
