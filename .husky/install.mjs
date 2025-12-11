@@ -19,7 +19,7 @@ try {
 } catch (error) {
   console.error(
     'Failed to initialize Husky:',
-    error instanceof Error ? error.message : String(error),
+    error instanceof Error ? error : String(error),
   );
   process.exit(1);
 }
